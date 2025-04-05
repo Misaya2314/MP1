@@ -6,7 +6,7 @@ export * from './career'
 export const name = 'Misaya2314'
 export const headline ='何も言わないままは嘘だ'
 export const introduction =
-  "雨上がりの空が綺麗です"
+  ""
 export const email = '1301503758@qq.com'
 export const githubUsername = 'Misaya2314'
 

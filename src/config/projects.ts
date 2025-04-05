@@ -34,12 +34,12 @@ export const awards: Array<ActivityItemType> = [
 ]
 
 // Research & Projects
-export const projectHeadLine = "Research & Projects"
-export const projectIntro = "Academic research and technical projects I've worked on."
+export const projectHeadLine = "研究与项目"
+export const projectIntro = "目前的进展"
 
 export const projects: Array<ProjectItemType> = [
   {
-    name: 'Student Final Project Portfolio',
+    name: '日志异常',
     description: 'Static website portfolio',
     link: { href: 'scls-cs.com', label: 'GitHub Cards' },
     tags: ['Website', 'Next.js', 'TailwindCSS', 'DaisyUI', 'Portfolio']
@@ -65,7 +65,7 @@ export const projects: Array<ProjectItemType> = [
 ]
 
 // Hobbies & Volunteer
-export const activitiesHeadLine = "Hobbies & Volunteer"
+export const activitiesHeadLine = "一点爱好和兴趣"
 export const activitiesIntro = "Personal interests and community contributions."
 
 export const activities: Array<ActivityItemType> = [
@@ -74,7 +74,7 @@ export const activities: Array<ActivityItemType> = [
     description:
       'Teaching basic Python programming concepts to beginners. Covering variables, control flow, and functions.',
     date: '2024-02-24',
-    location: 'Shanghai',
+    location: '重庆',
     link: 'https://example.com/python-workshop',
   },
   {
