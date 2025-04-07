@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { getBlogBySlug } from '@/lib/blogs'
 import { getMDXContent } from '@/lib/mdx'
 import { BlogLayout } from '@/components/layout/BlogLayout'
+import GiscusComments from '@/components/comments/GiscusComments'
 
 export const runtime = process.env.NEXT_RUNTIME === 'edge' ? 'edge' : 'nodejs'
 
@@ -42,6 +43,9 @@ export default async function BlogPage({ params }: Props) {
     >
       <div className="mt-8 prose dark:prose-invert">
         {content}
+      </div>
+      <div className="mt-10">
+        <GiscusComments term={params.slug} />
       </div>
     </BlogLayout>
   )
