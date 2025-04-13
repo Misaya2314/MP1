@@ -5,6 +5,7 @@ import { Layout } from '@/components/layout/Layout'
 import { name, headline, introduction } from '@/config/infoConfig'
 import '@/styles/tailwind.css'
 import ScrollingCharacters from '@/components/ScrollingCharacters'
+import MusicPlayer from '@/components/MusicPlayer'
 
 export const metadata: Metadata = {
   title: {
@@ -32,6 +33,7 @@ export default function RootLayout({
             <Layout>{children}</Layout>
           </div>
           <ScrollingCharacters />
+          <MusicPlayer />
         </Providers>
       </body>
     </html>
