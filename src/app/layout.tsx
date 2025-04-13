@@ -4,6 +4,7 @@ import { Providers } from '@/app/providers'
 import { Layout } from '@/components/layout/Layout'
 import { name, headline, introduction } from '@/config/infoConfig'
 import '@/styles/tailwind.css'
+import ScrollingCharacters from '@/components/ScrollingCharacters'
 
 export const metadata: Metadata = {
   title: {
@@ -30,6 +31,7 @@ export default function RootLayout({
           <div className="flex w-full">
             <Layout>{children}</Layout>
           </div>
+          <ScrollingCharacters />
         </Providers>
       </body>
     </html>

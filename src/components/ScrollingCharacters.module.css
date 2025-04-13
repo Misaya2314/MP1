@@ -1,0 +1,52 @@
+.bottomContainer {
+  width: 100%;
+  height: 80px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  background-color: transparent; /* 透明背景 */
+  overflow: hidden;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.bottomCharacter {
+  position: absolute;
+  bottom: -40px; /* 使用负值将图片下移，贴合底部 */
+  display: inline-block;
+  z-index: 10;
+  cursor: pointer;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.spriteImage {
+  width: 80px;
+  height: 80px;
+  background-image: url('/images/character_sprite.png'); /* 精灵图路径 */
+  background-repeat: no-repeat;
+  display: block;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/* 当用户偏好减少动画时 */
+@media (prefers-reduced-motion) {
+  .bottomCharacter {
+    transition: none;
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .bottomContainer {
+    height: 60px;
+  }
+  
+  .spriteImage {
+    width: 60px;
+    height: 60px;
+    background-size: auto 60px; /* 缩放精灵图 */
+  }
+} 
