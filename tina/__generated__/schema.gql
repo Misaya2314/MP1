@@ -56,10 +56,13 @@ type Query {
   document(collection: String, relativePath: String): DocumentNode!
   post(relativePath: String): Post!
   postConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: PostFilter): PostConnection!
+  music(relativePath: String): Music!
+  musicConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: MusicFilter): MusicConnection!
 }
 
 input DocumentFilter {
   post: PostFilter
+  music: MusicFilter
 }
 
 type DocumentConnectionEdges {
@@ -85,7 +88,7 @@ type Collection {
   documents(before: String, after: String, first: Float, last: Float, sort: String, filter: DocumentFilter, folder: String): DocumentConnection!
 }
 
-union DocumentNode = Post | Folder
+union DocumentNode = Post | Music | Folder
 
 type Post implements Node & Document {
   title: String!
@@ -136,6 +139,48 @@ type PostConnection implements Connection {
   edges: [PostConnectionEdges]
 }
 
+type Music implements Node & Document {
+  title: String!
+  artist: String!
+  cover: String
+  audioFile: String!
+  active: Boolean!
+  id: ID!
+  _sys: SystemInfo!
+  _values: JSON!
+}
+
+input ImageFilter {
+  startsWith: String
+  eq: String
+  exists: Boolean
+  in: [String]
+}
+
+input BooleanFilter {
+  eq: Boolean
+  exists: Boolean
+}
+
+input MusicFilter {
+  title: StringFilter
+  artist: StringFilter
+  cover: ImageFilter
+  audioFile: ImageFilter
+  active: BooleanFilter
+}
+
+type MusicConnectionEdges {
+  cursor: String!
+  node: Music
+}
+
+type MusicConnection implements Connection {
+  pageInfo: PageInfo!
+  totalCount: Float!
+  edges: [MusicConnectionEdges]
+}
+
 type Mutation {
   addPendingDocument(collection: String!, relativePath: String!, template: String): DocumentNode!
   updateDocument(collection: String, relativePath: String!, params: DocumentUpdateMutation!): DocumentNode!
@@ -144,15 +189,19 @@ type Mutation {
   createFolder(collection: String, relativePath: String!): DocumentNode!
   updatePost(relativePath: String!, params: PostMutation!): Post!
   createPost(relativePath: String!, params: PostMutation!): Post!
+  updateMusic(relativePath: String!, params: MusicMutation!): Music!
+  createMusic(relativePath: String!, params: MusicMutation!): Music!
 }
 
 input DocumentUpdateMutation {
   post: PostMutation
+  music: MusicMutation
   relativePath: String
 }
 
 input DocumentMutation {
   post: PostMutation
+  music: MusicMutation
 }
 
 input PostMutation {
@@ -160,6 +209,14 @@ input PostMutation {
   date: String
   description: String
   body: JSON
+}
+
+input MusicMutation {
+  title: String
+  artist: String
+  cover: String
+  audioFile: String
+  active: Boolean
 }
 
 schema {

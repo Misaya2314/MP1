@@ -6,7 +6,7 @@ import styles from './MusicPlayer.module.css';
 type Song = {
   title: string;
   artist: string;
-  src: string;
+  audioFile: string;
   cover?: string;
 };
 
@@ -16,32 +16,66 @@ export default function MusicPlayer() {
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [shuffle, setShuffle] = useState(false);
-  
-  const songs: Song[] = [
-    {
-      title: "夜明けと蛍",
-      artist: "n-buna",
-      src: "/music/n-buna,初音ミク - 夜明けと蛍.mp3",
-      cover: "/images/hanatoame.jpg"
-    },
-    {
-      title: "もうじき夏が終わるから",
-      artist: "n-buna",
-      src: "/music/n-buna,初音ミク - もうじき夏が終わるから.mp3",
-      cover: "/images/hanatoame.jpg"
-    },
-    {
-      title: "乙女よ大志を抱け!!",
-      artist: "中村繪里子",
-      src: "/music/中村繪里子 - 乙女よ大志を抱け!!.mp3",
-      cover: "/images/THE IDOLM@STER ANIM@TION MASTER 02.jpg"
-    }
-  ];
+  const [songs, setSongs] = useState<Song[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const currentSong = songs[currentSongIndex];
-
+  // 从API获取音乐数据
   useEffect(() => {
-    audioRef.current = new Audio(currentSong.src);
+    async function fetchMusicData() {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/music');
+        
+        if (!response.ok) {
+          throw new Error('获取音乐数据失败');
+        }
+        
+        const data = await response.json();
+        
+        if (data && Array.isArray(data) && data.length > 0) {
+          setSongs(data);
+        } else {
+          // 如果没有音乐数据，使用默认的音乐数据
+          setSongs([
+            {
+              title: "夜明けと蛍",
+              artist: "n-buna & 初音ミク",
+              audioFile: "/music/n-buna,初音ミク - 夜明けと蛍.mp3",
+              cover: "/images/hanatoame.jpg"
+            }
+          ]);
+        }
+      } catch (err) {
+        console.error('获取音乐数据出错:', err);
+        setError('获取音乐数据失败，使用默认音乐');
+        
+        // 使用默认的音乐数据
+        setSongs([
+          {
+            title: "夜明けと蛍",
+            artist: "n-buna & 初音ミク",
+            audioFile: "/music/n-buna,初音ミク - 夜明けと蛍.mp3",
+            cover: "/images/hanatoame.jpg"
+          }
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    fetchMusicData();
+  }, []);
+  
+  // 处理音频播放
+  useEffect(() => {
+    // 如果没有加载完或者没有歌曲，不执行音频相关逻辑
+    if (isLoading || songs.length === 0) return;
+    
+    const currentSong = songs[currentSongIndex];
+    if (!currentSong) return;
+    
+    audioRef.current = new Audio(currentSong.audioFile);
     
     // 监听音频加载完成事件
     audioRef.current.addEventListener('canplaythrough', () => {
@@ -59,23 +93,26 @@ export default function MusicPlayer() {
       audioRef.current?.pause();
       audioRef.current = null;
     };
-  }, [currentSongIndex]);
+  }, [currentSongIndex, songs, isLoading]);
 
+  // 处理播放状态变化
   useEffect(() => {
-    if (audioRef.current) {
+    if (!isLoading && songs.length > 0 && audioRef.current) {
       if (isPlaying) {
         audioRef.current.play().catch(e => console.error("播放出错:", e));
       } else {
         audioRef.current.pause();
       }
     }
-  }, [isPlaying]);
+  }, [isPlaying, isLoading, songs]);
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
   };
 
   const playNextSong = () => {
+    if (!songs.length) return;
+    
     if (shuffle) {
       let nextIndex;
       do {
@@ -88,6 +125,8 @@ export default function MusicPlayer() {
   };
 
   const playPrevSong = () => {
+    if (!songs.length) return;
+    
     if (shuffle) {
       let prevIndex;
       do {
@@ -111,6 +150,13 @@ export default function MusicPlayer() {
     setIsExpanded(false);
   };
 
+  // 如果没有加载完或者没有歌曲，不渲染播放器
+  if (isLoading || songs.length === 0) {
+    return null;
+  }
+
+  const currentSong = songs[currentSongIndex];
+
   return (
     <div 
       className={`${styles.musicPlayer} ${isExpanded ? styles.expanded : ''}`}
@@ -124,6 +170,8 @@ export default function MusicPlayer() {
       </div>
       
       <div className={styles.expandedPanel}>
+        {error && <div className={styles.errorMessage}>{error}</div>}
+        
         <div className={styles.songDetails}>
           <div className={styles.coverArt}>
             {currentSong.cover ? (

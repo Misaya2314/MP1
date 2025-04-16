@@ -84,6 +84,8 @@ export type Query = {
   document: DocumentNode;
   post: Post;
   postConnection: PostConnection;
+  music: Music;
+  musicConnection: MusicConnection;
 };
 
 
@@ -122,8 +124,24 @@ export type QueryPostConnectionArgs = {
   filter?: InputMaybe<PostFilter>;
 };
 
+
+export type QueryMusicArgs = {
+  relativePath?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryMusicConnectionArgs = {
+  before?: InputMaybe<Scalars['String']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
+  last?: InputMaybe<Scalars['Float']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MusicFilter>;
+};
+
 export type DocumentFilter = {
   post?: InputMaybe<PostFilter>;
+  music?: InputMaybe<MusicFilter>;
 };
 
 export type DocumentConnectionEdges = {
@@ -163,7 +181,7 @@ export type CollectionDocumentsArgs = {
   folder?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type DocumentNode = Post | Folder;
+export type DocumentNode = Post | Music | Folder;
 
 export type Post = Node & Document & {
   __typename?: 'Post';
@@ -217,6 +235,51 @@ export type PostConnection = Connection & {
   edges?: Maybe<Array<Maybe<PostConnectionEdges>>>;
 };
 
+export type Music = Node & Document & {
+  __typename?: 'Music';
+  title: Scalars['String']['output'];
+  artist: Scalars['String']['output'];
+  cover?: Maybe<Scalars['String']['output']>;
+  audioFile: Scalars['String']['output'];
+  active: Scalars['Boolean']['output'];
+  id: Scalars['ID']['output'];
+  _sys: SystemInfo;
+  _values: Scalars['JSON']['output'];
+};
+
+export type ImageFilter = {
+  startsWith?: InputMaybe<Scalars['String']['input']>;
+  eq?: InputMaybe<Scalars['String']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type BooleanFilter = {
+  eq?: InputMaybe<Scalars['Boolean']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type MusicFilter = {
+  title?: InputMaybe<StringFilter>;
+  artist?: InputMaybe<StringFilter>;
+  cover?: InputMaybe<ImageFilter>;
+  audioFile?: InputMaybe<ImageFilter>;
+  active?: InputMaybe<BooleanFilter>;
+};
+
+export type MusicConnectionEdges = {
+  __typename?: 'MusicConnectionEdges';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<Music>;
+};
+
+export type MusicConnection = Connection & {
+  __typename?: 'MusicConnection';
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float']['output'];
+  edges?: Maybe<Array<Maybe<MusicConnectionEdges>>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addPendingDocument: DocumentNode;
@@ -226,6 +289,8 @@ export type Mutation = {
   createFolder: DocumentNode;
   updatePost: Post;
   createPost: Post;
+  updateMusic: Music;
+  createMusic: Music;
 };
 
 
@@ -273,13 +338,27 @@ export type MutationCreatePostArgs = {
   params: PostMutation;
 };
 
+
+export type MutationUpdateMusicArgs = {
+  relativePath: Scalars['String']['input'];
+  params: MusicMutation;
+};
+
+
+export type MutationCreateMusicArgs = {
+  relativePath: Scalars['String']['input'];
+  params: MusicMutation;
+};
+
 export type DocumentUpdateMutation = {
   post?: InputMaybe<PostMutation>;
+  music?: InputMaybe<MusicMutation>;
   relativePath?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DocumentMutation = {
   post?: InputMaybe<PostMutation>;
+  music?: InputMaybe<MusicMutation>;
 };
 
 export type PostMutation = {
@@ -289,7 +368,17 @@ export type PostMutation = {
   body?: InputMaybe<Scalars['JSON']['input']>;
 };
 
+export type MusicMutation = {
+  title?: InputMaybe<Scalars['String']['input']>;
+  artist?: InputMaybe<Scalars['String']['input']>;
+  cover?: InputMaybe<Scalars['String']['input']>;
+  audioFile?: InputMaybe<Scalars['String']['input']>;
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type PostPartsFragment = { __typename: 'Post', title: string, date: string, description: string, body?: any | null };
+
+export type MusicPartsFragment = { __typename: 'Music', title: string, artist: string, cover?: string | null, audioFile: string, active: boolean };
 
 export type PostQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];
@@ -310,6 +399,25 @@ export type PostConnectionQueryVariables = Exact<{
 
 export type PostConnectionQuery = { __typename?: 'Query', postConnection: { __typename?: 'PostConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'PostConnectionEdges', cursor: string, node?: { __typename: 'Post', id: string, title: string, date: string, description: string, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
 
+export type MusicQueryVariables = Exact<{
+  relativePath: Scalars['String']['input'];
+}>;
+
+
+export type MusicQuery = { __typename?: 'Query', music: { __typename: 'Music', id: string, title: string, artist: string, cover?: string | null, audioFile: string, active: boolean, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } };
+
+export type MusicConnectionQueryVariables = Exact<{
+  before?: InputMaybe<Scalars['String']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
+  last?: InputMaybe<Scalars['Float']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MusicFilter>;
+}>;
+
+
+export type MusicConnectionQuery = { __typename?: 'Query', musicConnection: { __typename?: 'MusicConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'MusicConnectionEdges', cursor: string, node?: { __typename: 'Music', id: string, title: string, artist: string, cover?: string | null, audioFile: string, active: boolean, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
+
 export const PostPartsFragmentDoc = gql`
     fragment PostParts on Post {
   __typename
@@ -317,6 +425,16 @@ export const PostPartsFragmentDoc = gql`
   date
   description
   body
+}
+    `;
+export const MusicPartsFragmentDoc = gql`
+    fragment MusicParts on Music {
+  __typename
+  title
+  artist
+  cover
+  audioFile
+  active
 }
     `;
 export const PostDocument = gql`
@@ -376,6 +494,63 @@ export const PostConnectionDocument = gql`
   }
 }
     ${PostPartsFragmentDoc}`;
+export const MusicDocument = gql`
+    query music($relativePath: String!) {
+  music(relativePath: $relativePath) {
+    ... on Document {
+      _sys {
+        filename
+        basename
+        hasReferences
+        breadcrumbs
+        path
+        relativePath
+        extension
+      }
+      id
+    }
+    ...MusicParts
+  }
+}
+    ${MusicPartsFragmentDoc}`;
+export const MusicConnectionDocument = gql`
+    query musicConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: MusicFilter) {
+  musicConnection(
+    before: $before
+    after: $after
+    first: $first
+    last: $last
+    sort: $sort
+    filter: $filter
+  ) {
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        ... on Document {
+          _sys {
+            filename
+            basename
+            hasReferences
+            breadcrumbs
+            path
+            relativePath
+            extension
+          }
+          id
+        }
+        ...MusicParts
+      }
+    }
+  }
+}
+    ${MusicPartsFragmentDoc}`;
 export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
   export function getSdk<C>(requester: Requester<C>) {
     return {
@@ -384,6 +559,12 @@ export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) 
       },
     postConnection(variables?: PostConnectionQueryVariables, options?: C): Promise<{data: PostConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PostConnectionQueryVariables, query: string}> {
         return requester<{data: PostConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PostConnectionQueryVariables, query: string}, PostConnectionQueryVariables>(PostConnectionDocument, variables, options);
+      },
+    music(variables: MusicQueryVariables, options?: C): Promise<{data: MusicQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: MusicQueryVariables, query: string}> {
+        return requester<{data: MusicQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: MusicQueryVariables, query: string}, MusicQueryVariables>(MusicDocument, variables, options);
+      },
+    musicConnection(variables?: MusicConnectionQueryVariables, options?: C): Promise<{data: MusicConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: MusicConnectionQueryVariables, query: string}> {
+        return requester<{data: MusicConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: MusicConnectionQueryVariables, query: string}, MusicConnectionQueryVariables>(MusicConnectionDocument, variables, options);
       }
     };
   }

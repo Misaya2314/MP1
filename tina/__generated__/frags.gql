@@ -5,3 +5,12 @@ fragment PostParts on Post {
   description
   body
 }
+
+fragment MusicParts on Music {
+  __typename
+  title
+  artist
+  cover
+  audioFile
+  active
+}

@@ -213,4 +213,14 @@
   .expandedPanel {
     width: 250px;
   }
+}
+
+.errorMessage {
+  color: #ff4757;
+  font-size: 12px;
+  text-align: center;
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 4px;
+  background-color: rgba(255, 71, 87, 0.1);
 } 
